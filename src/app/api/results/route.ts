@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-// This is the same in-memory cache from the other file.
 const jobCache = new Map();
 
 export async function GET(request: Request) {
@@ -17,7 +16,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ status: 'not_found' }, { status: 404 });
   }
 
-  // If the job is complete, we can remove it from the cache to save memory.
   if (job.status === 'completed' || job.status === 'failed') {
     jobCache.delete(jobId);
   }
