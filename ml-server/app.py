@@ -3,9 +3,8 @@ from sentence_transformers import SentenceTransformer
 from PIL import Image
 import logging
 import os
-import base64 # Import base64 library
-import io     # Import io library
-
+import base64 
+import io     
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
@@ -25,13 +24,11 @@ def get_vector():
     if model is None:
         return jsonify({"error": "Model is not loaded."}), 500
 
-    # We now expect a JSON payload with a base64 string
     data = request.get_json()
     if not data or 'image' not in data:
         return jsonify({"error": "No image data provided in JSON payload."}), 400
 
     try:
-        # Decode the base64 string back into image bytes
         image_data = base64.b64decode(data['image'])
         img = Image.open(io.BytesIO(image_data))
         

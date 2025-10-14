@@ -7,11 +7,9 @@ async function getVector(localImagePath) {
   try {
     const fullPath = path.join(process.cwd(), 'public', localImagePath);
     
-    // Read image and convert to base64
     const imageBuffer = fs.readFileSync(fullPath);
     const base64Image = imageBuffer.toString('base64');
 
-    // Send a JSON payload
     const response = await fetch(PYTHON_API_URL, {
       method: 'POST',
       headers: {

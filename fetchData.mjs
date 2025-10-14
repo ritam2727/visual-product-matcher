@@ -11,7 +11,6 @@ async function inspectApiData() {
     const response = await fetch(API_URL);
     const products = await response.json();
 
-    // This is the important part: we log the first 5 products to see their structure.
     console.log("--- RAW DATA FROM API (First 5 Products) ---");
     console.log(JSON.stringify(products.slice(0, 5), null, 2));
     console.log("-------------------------------------------");

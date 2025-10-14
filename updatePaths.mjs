@@ -9,7 +9,6 @@ try {
 
   const updatedProducts = products.map(product => {
     const fileExtension = product.imageUrl.split('.').pop();
-    // This line creates the correct local path, e.g., /images/products/1.jpeg
     product.imageUrl = `/images/products/${product.id}.${fileExtension}`;
     return product;
   });

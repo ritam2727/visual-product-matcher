@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-// A function to calculate the similarity between two vectors
 function cosineSimilarity(vecA, vecB) {
   if (!vecA || !vecB || vecA.length !== vecB.length) {
     return 0;
@@ -25,9 +24,7 @@ function cosineSimilarity(vecA, vecB) {
   return dotProduct / magnitude;
 }
 
-// --- Main script logic ---
 try {
-  // Get the two product IDs from the command line
   const id1 = process.argv[2];
   const id2 = process.argv[3];
 
