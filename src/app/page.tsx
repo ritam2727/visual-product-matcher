@@ -64,7 +64,7 @@ export default function Home() {
         const blob = await response.blob();
         fileToUpload = new File([blob], 'imageFromUrl.jpg', { type: blob.type });
         setImagePreview(imageUrl);
-      } catch (e) {
+      } catch (urlError) {
         setError('Failed to fetch image. Please check the URL (it must be publicly accessible).');
         setIsLoading(false);
         return;
@@ -96,8 +96,6 @@ export default function Home() {
         throw new Error('Did not receive a job ID from the server.');
       }
 
-      let jobTimeoutId: NodeJS.Timeout;
-
       const intervalId = setInterval(async () => {
         try {
             const resultResponse = await fetch(`/api/results?jobId=${jobId}`);
@@ -121,7 +119,7 @@ export default function Home() {
                 setError('Failed to get job status from the server.');
                 setIsLoading(false);
             }
-        } catch (pollError) {
+        } catch {
             clearTimeout(jobTimeoutId);
             clearInterval(intervalId);
             setPollingIntervalId(null);
@@ -130,7 +128,7 @@ export default function Home() {
         }
       }, 3000);
 
-      jobTimeoutId = setTimeout(() => {
+      const jobTimeoutId = setTimeout(() => {
         clearInterval(intervalId);
         setPollingIntervalId(null);
         setError('The request timed out after 3 minutes. The server might be busy. Please try again.');
