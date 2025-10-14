@@ -1,83 +1,55 @@
 Visual Product Matcher
-A web application that helps users find visually similar products based on an uploaded image or an image URL. This project was built as a technical assessment.
+
+
+This project is a web application that allows users to find visually similar products by uploading an image or providing an image URL. It leverages a machine learning model to analyze images and return the most relevant matches from a product database.
 
 Live Application URL: https://visual-product-matcher-i22d.onrender.com
 
 My Approach (Brief Write-up)
-My approach was to build a full-stack application using a decoupled architecture to separate the user interface from the AI processing logic.
+My approach was to build a decoupled, full-stack application using a modern tech stack focused on developer experience and scalability. I chose Next.js for the frontend and API layer due to its powerful routing, serverless functions, and excellent React framework. This allowed me to create a user-friendly interface and a robust "middleman" API in a single codebase.
 
-For the frontend, I chose Next.js with React and TypeScript. This provided a robust framework for building a responsive user interface while also handling the server-side API route needed to communicate with the backend. For styling, I used Tailwind CSS for rapid, utility-first design.
+For the core AI functionality, I created a separate microservice in Python using Flask. This server's sole responsibility is to host a pre-trained sentence-transformers/clip-ViT-B-32 model, which converts images into vector embeddings. This decoupled architecture separates the AI processing from the main application logic, making both services easier to manage and scale independently.
 
-The core visual search logic is handled by a separate Python server built with Flask. This server uses a pre-trained CLIP-ViT-B-32 model from the transformers library to convert images into 512-dimension vector embeddings. When a user uploads an image, the Next.js frontend sends it to its API route, which in turn calls the Python server to get a vector. This vector is then compared against a pre-computed database of product vectors using cosine similarity to find the closest matches.
-
-Both the Next.js application and the Python AI server are deployed as separate web services on Render, allowing them to scale independently and communicate via public URLs. This setup ensures the application is robust and mirrors a real-world production environment.
+To handle the slow "cold starts" of the free hosting tier on Render, I implemented an asynchronous polling system. When a user submits an image, the Next.js API immediately returns a job ID and processes the image in the background. The frontend then polls a separate endpoint every few seconds to check for the completed results. This provides a resilient and non-blocking user experience, ensuring the application works reliably even with the limitations of a free hosting plan.
 
 Features
-[x] Image Upload: Supports both drag-and-drop file upload and direct click-to-upload.
+Dual Image Input: Supports both direct file uploads (including drag-and-drop) and image URL submission.
 
-[x] Image URL Input: Users can paste a public URL to an image.
+AI-Powered Search: Uses a CLIP model to generate vector embeddings for powerful visual similarity matching.
 
-[x] Search Interface: Displays the user's uploaded image and a list of the top 3 most similar products.
+Top 3 Results: Displays the three most visually similar products from the database.
 
-[x] Product Database: Contains over 50 products with metadata (name, image, etc.).
+Responsive Design: The user interface is fully responsive and works well on both desktop and mobile devices.
 
-[x] Live Hosting: The application is deployed and live on Render.
-
-[x] Mobile Responsive Design: The interface is optimized for both desktop and mobile devices.
-
-[x] Loading States: A loading spinner provides a better user experience during the search process.
-
-[x] Error Handling: The application displays clear error messages for issues like failed uploads or server problems.
+Asynchronous Processing: Handles long-running AI tasks without freezing the user interface or timing out.
 
 Tech Stack
-Frontend: Next.js, React, TypeScript, Tailwind CSS
+Frontend: Next.js (React), TypeScript, Tailwind CSS
 
-Backend (AI Server): Python, Flask, Transformers, PyTorch
+Backend (API Layer): Next.js API Routes
 
-Deployment: Render, Git & GitHub
+Backend (AI Service): Python, Flask, Sentence-Transformers
+
+Hosting: Render
 
 How to Run Locally
-To set up and run this project on your local machine, please follow these steps.
-
-Prerequisites:
-
-Node.js (v18 or later)
-
-Python (v3.9 or later)
-
-Git
-
-1. Clone the repository:
+Clone the repository:
 
 git clone [https://github.com/ritam2727/visual-product-matcher.git](https://github.com/ritam2727/visual-product-matcher.git)
 cd visual-product-matcher
 
-2. Set up and run the Python AI Server:
+Install frontend dependencies:
 
-# Navigate to the ML server directory
-cd ml-server
-
-# Create a virtual environment and activate it
-python -m venv venv
-source venv/bin/activate  # On Windows, use: venv\Scripts\activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Start the server
-python app.py
-
-The AI server will now be running at http://localhost:5000.
-
-3. Set up and run the Next.js Frontend:
-
-# In a new terminal, navigate to the project's root directory
-cd .. 
-
-# Install frontend dependencies
 npm install
 
-# Start the development server
+Set up and run the Python AI server:
+
+cd ml-server
+pip install -r requirements.txt
+python app.py
+
+Run the frontend application: (In a separate terminal, from the root folder)
+
 npm run dev
 
-The web application will now be available at http://localhost:3000.
+Open http://localhost:3000 in your browser.
