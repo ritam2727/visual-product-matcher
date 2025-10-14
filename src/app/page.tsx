@@ -33,9 +33,8 @@
 //   const [results, setResults] = useState<Product[]>([]);
 //   const [isLoading, setIsLoading] = useState(false);
 //   const [error, setError] = useState<string | null>(null);
-//   const [isDragging, setIsDragging] = useState(false); // <-- NEW: State for drag feedback
+//   const [isDragging, setIsDragging] = useState(false); 
 
-//   // --- Core Logic (Unchanged) ---
 //   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 //     event.preventDefault();
 //     if (!imageFile) {
@@ -63,9 +62,6 @@
 //     }
 //   };
 
-//   // --- File Handling Logic ---
-
-//   // NEW: Shared function to handle the file logic
 //   const processFile = (file: File) => {
 //     if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
 //       setImageFile(file);
@@ -79,7 +75,6 @@
 //     }
 //   };
 
-//   // Updated to use the shared function
 //   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 //     const file = event.target.files?.[0];
 //     if (file) {
@@ -87,7 +82,6 @@
 //     }
 //   };
 
-//   // NEW: Drag and drop event handlers
 //   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
 //     event.preventDefault();
 //     setIsDragging(true);
@@ -107,13 +101,14 @@
 //     }
 //   };
   
-//   // Helper function to determine the color of the similarity badge
 //   const getSimilarityColor = (similarity: number) => {
 //     if (similarity > 0.9) return 'bg-green-100 text-green-800';
 //     if (similarity > 0.8) return 'bg-emerald-100 text-emerald-800';
 //     return 'bg-amber-100 text-amber-800';
 //   };
 
+//   // NEW: Create a filtered list of results to render
+//   const filteredResults = results.filter(product => (product.similarity ?? 0) >= 0.5);
 
 //   return (
 //     <main className="flex min-h-screen flex-col items-center p-4 md:p-12 lg:p-24 bg-slate-100">
@@ -124,10 +119,8 @@
 //         <p className="mt-2 text-slate-500">Find products with the power of AI vision.</p>
 //       </div>
 
-//       {/* Search Form Card */}
 //       <div className="w-full max-w-lg p-6 bg-white rounded-xl shadow-xl border border-slate-200 mb-12">
 //         <form onSubmit={handleSubmit}>
-//           {/* UPDATED: Added drag-and-drop handlers and dynamic class */}
 //           <label 
 //             htmlFor="file-upload" 
 //             className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition-colors
@@ -170,7 +163,6 @@
 //         </form>
 //       </div>
 
-//       {/* Error Display */}
 //       {error && (
 //         <div className="w-full max-w-lg flex items-center p-4 mb-8 text-sm font-bold text-red-800 rounded-lg bg-red-100" role="alert">
 //           <ErrorIcon />
@@ -178,7 +170,6 @@
 //         </div>
 //       )}
 
-//       {/* Loading Spinner */}
 //       {isLoading && (
 //         <div className="flex flex-col items-center justify-center gap-4">
 //           <div className="w-12 h-12 rounded-full animate-spin border-4 border-solid border-green-500 border-t-transparent"></div>
@@ -186,7 +177,7 @@
 //         </div>
 //       )}
 
-//       {/* Results Section (Unchanged) */}
+//       {/* UPDATED: Main results section now checks original results list */}
 //       {results.length > 0 && (
 //         <div className="w-full max-w-6xl">
 //           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -198,21 +189,31 @@
 //             </div>
 //             <div className="md:col-span-8 lg:col-span-9">
 //               <h2 className="text-3xl font-bold mb-6 text-slate-800">Similar Products Found</h2>
-//               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-//                 {results.map((product) => (
-//                   <div key={product.id} className="bg-white rounded-xl shadow-lg p-3 flex flex-col items-center group transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-//                     <div className="w-full h-40 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden mb-3">
-//                       <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain" />
+
+//               {/* UPDATED: Check if the *filtered* list has items */}
+//               {filteredResults.length > 0 ? (
+//                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//                   {/* Render the filtered list */}
+//                   {filteredResults.map((product) => (
+//                     <div key={product.id} className="bg-white rounded-xl shadow-lg p-3 flex flex-col items-center group transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+//                       <div className="w-full h-40 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden mb-3">
+//                         <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain" />
+//                       </div>
+//                       <p className="text-sm font-bold text-center text-slate-800 flex-grow">{product.name}</p>
+//                       {product.similarity !== undefined && (
+//                         <span className={`mt-2 px-2.5 py-1 rounded-full text-xs font-bold ${getSimilarityColor(product.similarity)}`}>
+//                           {`~${(product.similarity * 100).toFixed(0)}% Match`}
+//                         </span>
+//                       )}
 //                     </div>
-//                     <p className="text-sm font-bold text-center text-slate-800 flex-grow">{product.name}</p>
-//                     {product.similarity !== undefined && (
-//                       <span className={`mt-2 px-2.5 py-1 rounded-full text-xs font-bold ${getSimilarityColor(product.similarity)}`}>
-//                         {`~${(product.similarity * 100).toFixed(0)}% Match`}
-//                       </span>
-//                     )}
-//                   </div>
-//                 ))}
-//               </div>
+//                   ))}
+//                 </div>
+//               ) : (
+//                 // NEW: Show a message if no results are above 50%
+//                 <div className="w-full h-40 flex items-center justify-center bg-slate-50 rounded-lg">
+//                   <p className="text-slate-500 font-medium">No matches found with over 50% similarity.</p>
+//                 </div>
+//               )}
 //             </div>
 //           </div>
 //         </div>
@@ -231,16 +232,10 @@
 
 
 
-
-
-
-
-
-
-
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image'; // RECOMMENDED: Import the Next.js Image component
 
 // Define the structure of a product, including the similarity score
 interface Product {
@@ -273,7 +268,7 @@ export default function Home() {
   const [results, setResults] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false); 
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -294,8 +289,13 @@ export default function Home() {
       }
       const data: Product[] = await response.json();
       setResults(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) { // FIXED: Changed 'any' to 'unknown'
+      // Add a type guard for safer error handling
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred.');
+      }
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -347,7 +347,6 @@ export default function Home() {
     return 'bg-amber-100 text-amber-800';
   };
 
-  // NEW: Create a filtered list of results to render
   const filteredResults = results.filter(product => (product.similarity ?? 0) >= 0.5);
 
   return (
@@ -417,27 +416,25 @@ export default function Home() {
         </div>
       )}
 
-      {/* UPDATED: Main results section now checks original results list */}
       {results.length > 0 && (
         <div className="w-full max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="md:col-span-4 lg:col-span-3">
               <div className="p-4 bg-white rounded-xl shadow-lg border-2 border-green-500 sticky top-12">
                   <h3 className="text-lg font-bold mb-3 text-center text-slate-800">Your Image</h3>
-                  <img src={imagePreview!} alt="Uploaded preview" className="w-full h-auto object-contain rounded-lg" />
+                  {/* RECOMMENDED: Upgraded to next/image */}
+                  <Image src={imagePreview!} alt="Uploaded preview" width={400} height={400} className="w-full h-auto object-contain rounded-lg" />
               </div>
             </div>
             <div className="md:col-span-8 lg:col-span-9">
               <h2 className="text-3xl font-bold mb-6 text-slate-800">Similar Products Found</h2>
-
-              {/* UPDATED: Check if the *filtered* list has items */}
               {filteredResults.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {/* Render the filtered list */}
                   {filteredResults.map((product) => (
                     <div key={product.id} className="bg-white rounded-xl shadow-lg p-3 flex flex-col items-center group transition-transform duration-300 hover:scale-105 hover:shadow-xl">
-                      <div className="w-full h-40 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden mb-3">
-                        <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain" />
+                      <div className="w-full h-40 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden mb-3 relative">
+                        {/* RECOMMENDED: Upgraded to next/image */}
+                        <Image src={product.imageUrl} alt={product.name} fill={true} style={{objectFit: 'contain'}} />
                       </div>
                       <p className="text-sm font-bold text-center text-slate-800 flex-grow">{product.name}</p>
                       {product.similarity !== undefined && (
@@ -449,7 +446,6 @@ export default function Home() {
                   ))}
                 </div>
               ) : (
-                // NEW: Show a message if no results are above 50%
                 <div className="w-full h-40 flex items-center justify-center bg-slate-50 rounded-lg">
                   <p className="text-slate-500 font-medium">No matches found with over 50% similarity.</p>
                 </div>
