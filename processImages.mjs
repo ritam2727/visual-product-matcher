@@ -48,7 +48,7 @@ async function processAllImages() {
   }
   
   fs.writeFileSync(filePath, JSON.stringify(products, null, 2));
-  console.log('✅ All images processed. Vectors saved.');
+  console.log(' All images processed. Vectors saved.');
 }
 
 processAllImages();

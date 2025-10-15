@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-console.log("--- 🕵️ Running DEBUGGING script ---");
+console.log("---  Running DEBUGGING script ---");
 
 const API_URL = 'https://api.escuelajs.co/api/v1/products?offset=0&limit=100';
 
@@ -16,7 +16,7 @@ async function inspectApiData() {
     console.log("-------------------------------------------");
 
   } catch (error) {
-    console.error('❌ Error fetching or inspecting data:', error);
+    console.error(' Error fetching or inspecting data:', error);
   }
 }
 
