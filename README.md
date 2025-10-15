@@ -1,9 +1,12 @@
 Visual Product Matcher
-
-
 This project is a web application that allows users to find visually similar products by uploading an image or providing an image URL. It leverages a machine learning model to analyze images and return the most relevant matches from a product database.
 
-Live Application URL: https://visual-product-matcher-i22d.onrender.com
+Live URLs
+Main Application: https://visual-product-matcher-i22d.onrender.com
+
+Backend AI Server: https://backend-ml-python-server.onrender.com
+
+Note: The backend server is on a free plan and will "sleep" after 15 minutes of inactivity. To ensure the application works correctly, please click the backend server link first to wake it up. You will see a "Not Found" message, which is normal. Then, you can use the main application.
 
 My Approach (Brief Write-up)
 My approach was to build a decoupled, full-stack application using a modern tech stack focused on developer experience and scalability. I chose Next.js for the frontend and API layer due to its powerful routing, serverless functions, and excellent React framework. This allowed me to create a user-friendly interface and a robust "middleman" API in a single codebase.
@@ -26,7 +29,7 @@ Asynchronous Processing: Handles long-running AI tasks without freezing the user
 Tech Stack
 Frontend: Next.js (React), TypeScript, Tailwind CSS
 
-Backend (API Layer): Next.js API Routes
+Backend (API Layer): Next.js API Routes, Redis
 
 Backend (AI Service): Python, Flask, Sentence-Transformers
 
@@ -42,13 +45,13 @@ Install frontend dependencies:
 
 npm install
 
-Set up and run the Python AI server:
+Set up and run the Python AI server: (In a separate terminal)
 
 cd ml-server
 pip install -r requirements.txt
 python app.py
 
-Run the frontend application: (In a separate terminal, from the root folder)
+Run the frontend application: (In another terminal, from the root folder)
 
 npm run dev
 
