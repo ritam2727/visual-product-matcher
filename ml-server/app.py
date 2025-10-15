@@ -59,18 +59,18 @@ from flask_cors import CORS
 
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
-# This line is crucial: it allows your frontend to call this server directly
 CORS(app)
 
-# The model will be downloaded automatically from Hugging Face the first time the server starts.
-MODEL_NAME = 'sentence-transformers/clip-ViT-B-32'
-logging.info(f"Loading CLIP model from Hugging Face: {MODEL_NAME}")
-model = SentenceTransformer(MODEL_NAME)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(script_dir, 'clip-ViT-B-32-model')
+
+logging.info(f"Loading CLIP model from local path: {MODEL_PATH}")
+model = SentenceTransformer(MODEL_PATH)
 logging.info("✅ Model loaded successfully.")
+
 
 @app.route('/get-vector', methods=['POST'])
 def get_vector():
-    # This code is now designed to handle 'multipart/form-data'
     if 'image' not in request.files:
         logging.error("No 'image' file part in the request.")
         return jsonify({'error': 'No image file found in the request.'}), 400
@@ -83,7 +83,6 @@ def get_vector():
 
     if file:
         try:
-            # Open the image directly from the file stream
             image = Image.open(file.stream)
             if image.mode != 'RGB':
                 image = image.convert('RGB')
@@ -100,4 +99,5 @@ def get_vector():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
 
