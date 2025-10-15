@@ -3,3 +3,4 @@ transformers
 torch
 Pillow
 sentence-transformers
+Flask-Cors
